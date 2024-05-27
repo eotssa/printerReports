@@ -1,0 +1,42 @@
+[
+    {
+        "error": "Jam Inside",
+        "page": "3801"
+    },
+    {
+        "error": "Out of Memory",
+        "page": "2884"
+    },
+    {
+        "error": "Jam Tray",
+        "page": "2777"
+    },
+    {
+        "error": "Replace Toner",
+        "page": "2199"
+    },
+    {
+        "error": "Replace Toner",
+        "page": "1955"
+    },
+    {
+        "error": "Replace Toner",
+        "page": "1953"
+    },
+    {
+        "error": "Replace Toner",
+        "page": "1272"
+    },
+    {
+        "error": "Toner Low",
+        "page": "1207"
+    },
+    {
+        "error": "Replace Toner",
+        "page": "573"
+    },
+    {
+        "error": "Toner Low",
+        "page": "455"
+    }
+]

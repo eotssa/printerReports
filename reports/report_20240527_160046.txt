@@ -1,0 +1,7 @@
+Daily Printer Status Report
+==========================
+Model Name: Unknown
+Serial Number: Unknown
+Toner Level (height value): 44
+
+No new errors.
