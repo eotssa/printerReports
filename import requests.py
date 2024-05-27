@@ -65,6 +65,7 @@ class Printer:
                     'error': error,
                     'page': page
                 })
+        print(f"Parsed error history: {error_history}")  # Debug print
         return error_history
 
     def read_stored_errors(self):
@@ -79,6 +80,7 @@ class Printer:
         os.makedirs(os.path.dirname(file_path), exist_ok=True)
         with open(file_path, 'w') as file:
             json.dump(errors, file, indent=4)
+        print(f"Stored errors: {errors}")  # Debug print
 
     def write_report(self, model_name, toner_level, new_errors):
         os.makedirs(self.report_dir_path, exist_ok=True)
@@ -101,6 +103,14 @@ class Printer:
 
     def check_for_new_errors(self, error_history):
         stored_errors = self.read_stored_errors()
+        print(f"Stored errors read: {stored_errors}")  # Debug print
+
+        if not stored_errors:
+            # On the initial run, store the current errors and treat them as the initial state
+            self.write_stored_errors(error_history)
+            print(f"Initial error history stored for {self.name} (Serial: {self.serial_number}).")
+            return []
+
         new_errors = [error for error in error_history if error not in stored_errors]
         
         if new_errors:
@@ -153,7 +163,6 @@ class Printer:
 class BrotherDCP_L2540DW(Printer):
     def __init__(self, config):
         super().__init__(config)
-
 
 def load_printers(config_dir_path):
     config_files = [f for f in os.listdir(config_dir_path) if f.endswith('.json')]
