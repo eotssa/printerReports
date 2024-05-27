@@ -44,23 +44,18 @@ class Printer:
     def parse_error_history(self, html_content):
         soup = BeautifulSoup(html_content, 'html.parser')
         error_history = []
-        error_section = soup.find(self.error_selector['type'], self.error_selector['attrs'])
+        error_section = soup.find('div', {'class': 'contentsGroup'}).find_next('h3', string="Error History(last 10 errors)").find_next('table', {'class': 'list errorHistory'})
         
         if error_section is None:
             print("Error: Unable to find the error section.")
             return error_history
         
-        error_table = error_section.find('table', {'class': self.error_selector['table_class']})
-        if error_table is None:
-            print("Error: Unable to find the error table.")
-            return error_history
-        
-        error_rows = error_table.find_all(self.error_selector['row_tag'])
+        error_rows = error_section.find_all('tr')
         for row in error_rows:
             columns = row.find_all('td')
-            if len(columns) > max(self.error_selector['error_index'], self.error_selector['page_index']):
-                error = columns[self.error_selector['error_index']].text.strip()
-                page = columns[self.error_selector['page_index']].text.strip().replace('Page : ', '')  # Replace non-breaking spaces
+            if len(columns) >= 2:
+                error = columns[0].text.strip()
+                page = columns[1].text.strip().replace('Page : ', '')  # Replace non-breaking spaces
                 error_history.append({
                     'error': error,
                     'page': page
@@ -72,7 +67,9 @@ class Printer:
         file_path = os.path.join(self.report_dir_path, f"{self.serial_number}_stored_errors.json")
         if os.path.exists(file_path):
             with open(file_path, 'r') as file:
-                return json.load(file)
+                stored_errors = json.load(file)
+                print(f"Stored errors loaded: {stored_errors}")  # Debug print
+                return stored_errors
         return []
 
     def write_stored_errors(self, errors):
@@ -80,9 +77,9 @@ class Printer:
         os.makedirs(os.path.dirname(file_path), exist_ok=True)
         with open(file_path, 'w') as file:
             json.dump(errors, file, indent=4)
-        print(f"Stored errors: {errors}")  # Debug print
+        print(f"Stored errors written: {errors}")  # Debug print
 
-    def write_report(self, model_name, toner_level, new_errors):
+    def write_report(self, model_name, toner_level, new_errors, initial_run):
         os.makedirs(self.report_dir_path, exist_ok=True)
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         report_file_path = os.path.join(self.report_dir_path, f"{self.name}_{self.serial_number}_report_{timestamp}.txt")
@@ -93,7 +90,11 @@ class Printer:
             file.write(f"Model Name: {model_name}\n")
             file.write(f"Serial Number: {self.serial_number}\n")
             file.write(f"Toner Level (height value): {toner_level}\n")
-            if new_errors:
+            if initial_run:
+                file.write("\nInitial Errors:\n")
+                for error in new_errors:
+                    file.write(f"Error: {error['error']}, Page: {error['page']}\n")
+            elif new_errors:
                 file.write("\nNew Errors:\n")
                 for error in new_errors:
                     file.write(f"Error: {error['error']}, Page: {error['page']}\n")
@@ -105,23 +106,27 @@ class Printer:
         stored_errors = self.read_stored_errors()
         print(f"Stored errors read: {stored_errors}")  # Debug print
 
+        new_errors = []
+
+        initial_run = False
+
         if not stored_errors:
             # On the initial run, store the current errors and treat them as the initial state
             self.write_stored_errors(error_history)
             print(f"Initial error history stored for {self.name} (Serial: {self.serial_number}).")
-            return []
-
-        new_errors = [error for error in error_history if error not in stored_errors]
-        
-        if new_errors:
-            print(f"New Errors for {self.name} (Serial: {self.serial_number}):")
-            for error in new_errors:
-                print(f"Error: {error['error']}, Page: {error['page']}")
-            self.write_stored_errors(error_history)
+            new_errors = error_history
+            initial_run = True
         else:
-            print(f"No new errors for {self.name} (Serial: {self.serial_number}).")
+            new_errors = [error for error in error_history if error not in stored_errors]
+            if new_errors:
+                print(f"New Errors for {self.name} (Serial: {self.serial_number}):")
+                for error in new_errors:
+                    print(f"Error: {error['error']}, Page: {error['page']}")
+                self.write_stored_errors(error_history)
+            else:
+                print(f"No new errors for {self.name} (Serial: {self.serial_number}).")
         
-        return new_errors
+        return new_errors, initial_run
 
     def run(self):
         # Fetch and parse the toner level from the default page
@@ -148,7 +153,7 @@ class Printer:
             return
 
         # Check for new errors
-        new_errors = self.check_for_new_errors(error_history)
+        new_errors, initial_run = self.check_for_new_errors(error_history)
         
         # Print the daily printer status report
         print(f"\nDaily Printer Status Report for {self.name} (Serial: {self.serial_number})")
@@ -158,7 +163,7 @@ class Printer:
         print(f"Toner Level (height value): {toner_level}")
         
         # Write report to a file with a timestamp
-        self.write_report(model_name, toner_level, new_errors)
+        self.write_report(model_name, toner_level, new_errors, initial_run)
 
 class BrotherDCP_L2540DW(Printer):
     def __init__(self, config):

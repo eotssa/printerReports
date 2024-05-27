@@ -1,8 +1,0 @@
-Daily Printer Status Report
-==========================
-Printer Name: Brother DCP-L2540DW
-Model Name: Brother DCP-L2540DW series
-Serial Number: U63885C5N895737
-Toner Level (height value): 44
-
-No new errors.
