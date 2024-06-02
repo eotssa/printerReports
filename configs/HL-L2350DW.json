@@ -1,0 +1,32 @@
+{
+  "printer_name": "Brother HL-L2350DW",
+  "default_url": "http://192.168.0.202/",
+  "info_url": "http://192.168.0.202/general/information.html?kind=item",
+  "toner_selector": {
+    "type": "img",
+    "attrs": {
+      "class": "tonerremain",
+      "alt": "Black"
+    }
+  },
+  "model_selector": {
+    "type": "dt",
+    "string": "Model Name",
+    "next": "dd"
+  },
+  "serial_selector": {
+    "type": "dt",
+    "string": "Serial no.",
+    "next": "dd"
+  },
+  "error_selector": {
+    "type": "div",
+    "attrs": {
+      "class": "contentsGroup"
+    },
+    "table_class": "list errorHistory",
+    "row_tag": "tr",
+    "error_index": 1,
+    "page_index": 2
+  }
+}

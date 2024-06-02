@@ -1,0 +1,18 @@
+Daily Printer Status Report
+==========================
+Printer Name: Brother HL-L2350DW
+Model Name: Brother HL-L2350DW series
+Serial Number: U64964B8N321685
+Toner Level (height value): 0
+
+Initial Errors:
+Error: Replace Toner, Page: Page : 617
+Error: Jam Inside, Page: Page : 613
+Error: Toner Low, Page: Page : 519
+Error: 2-sided Disabled, Page: Page : 87
+Error: Jam Rear, Page: Page : 87
+Error: No Drum Unit, Page: Page : 0
+Error: , Page: Page : 0
+Error: , Page: Page : 0
+Error: , Page: Page : 0
+Error: , Page: Page : 0

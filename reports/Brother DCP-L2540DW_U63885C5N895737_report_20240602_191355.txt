@@ -1,0 +1,18 @@
+Daily Printer Status Report
+==========================
+Printer Name: Brother DCP-L2540DW
+Model Name: Brother DCP-L2540DW series
+Serial Number: U63885C5N895737
+Toner Level (height value): 44
+
+Initial Errors:
+Error: Jam Inside, Page: Page : 3801
+Error: Out of Memory, Page: Page : 2884
+Error: Jam Tray, Page: Page : 2777
+Error: Replace Toner, Page: Page : 2199
+Error: Replace Toner, Page: Page : 1955
+Error: Replace Toner, Page: Page : 1953
+Error: Replace Toner, Page: Page : 1272
+Error: Toner Low, Page: Page : 1207
+Error: Replace Toner, Page: Page : 573
+Error: Toner Low, Page: Page : 455
